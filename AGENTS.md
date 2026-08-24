@@ -36,7 +36,7 @@ If these commands fail because the project is not set up this way, follow [boots
 
 These files are not in this repository. They live in the shared standards repo and are fetched on demand, so read one only when the task touches its topic.
 
-Fetch a URL with your web-fetch tool, or `curl -fsSL <url>` if you have none. Do not copy, vendor, or commit these files into this project; the URL is the source of truth and tracks the latest version.
+Fetch a URL with your web-fetch tool, or `curl -fsSL URL` if you have none. Do not copy, vendor, or commit these files into this project; the URL is the source of truth and tracks the latest version.
 
 If a fetch fails, say so and stop. Do not substitute a convention from memory — the whole point of the link is that this project's rules may differ from the defaults you would otherwise assume.
 
