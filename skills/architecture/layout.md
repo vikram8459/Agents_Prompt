@@ -33,7 +33,7 @@ project_root/
 │   ├── integration/
 │   ├── e2e/
 │   └── fixtures/
-├── agent_docs/                    # Agent-facing standards, linked from AGENTS.md
+├── skills/                        # Agent-facing standards, linked from AGENTS.md
 │   ├── architecture/              # Includes adr/
 │   ├── conventions/
 │   └── guides/

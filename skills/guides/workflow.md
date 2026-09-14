@@ -29,7 +29,7 @@ Deliver everything from tier 2, plus the full design pass:
 5. **Choose patterns with a stated reason.** Name the pattern and the requirement forcing it.
 6. **Implement.**
 7. **Test** at unit, integration, and e2e level as the change warrants. See [testing](../conventions/testing.md).
-8. **Document**: an ADR in `agent_docs/architecture/adr/`, README updates, and a dependency sketch if the layer graph changed.
+8. **Document**: an ADR in `skills/architecture/adr/`, README updates, and a dependency sketch if the layer graph changed.
 
 An ADR records a decision that was genuinely contested — why this option, what was rejected, what it costs. Do not write one for a decision with no alternative.
 
