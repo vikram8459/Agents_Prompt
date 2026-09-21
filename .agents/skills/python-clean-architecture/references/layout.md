@@ -20,8 +20,10 @@ project_root/
 │       │   ├── messaging/
 │       │   ├── cache/
 │       │   └── external_apis/
-│       ├── interfaces/            # Delivery. FastAPI, CLI, GUI.
+│       ├── interfaces/            # Delivery. HTTP, gRPC, CLI, workers.
 │       │   ├── api/
+│       │   ├── grpc/
+│       │   ├── worker/
 │       │   ├── cli/
 │       │   └── gui/
 │       ├── config/
@@ -33,10 +35,12 @@ project_root/
 │   ├── integration/
 │   ├── e2e/
 │   └── fixtures/
-├── skills/                        # Agent-facing standards, linked from AGENTS.md
-│   ├── architecture/              # Includes adr/
-│   ├── conventions/
-│   └── guides/
+├── .agents/skills/                # Agent Skills holding these standards
+│   ├── python-clean-architecture/
+│   ├── python-code-conventions/
+│   └── python-workflow-and-tooling/
+├── docs/adr/                      # Architecture decision records
+├── contracts/                     # Published .proto or OpenAPI snapshots, if any
 ├── scripts/
 ├── pyproject.toml
 ├── poetry.lock
@@ -68,10 +72,10 @@ infrastructure/ ─┘
 - `core/` imports from the standard library and nothing else. No SQLAlchemy, no pydantic, no FastAPI.
 - `application/` imports `core/`. It depends on `core/interfaces/` abstractions, never on a concrete adapter.
 - `infrastructure/` imports `core/` to implement its interfaces.
-- Only the composition root (`interfaces/api/bootstrap.py`) is allowed to import concrete classes from `infrastructure/`.
+- Only the composition root (`interfaces/bootstrap.py`) is allowed to import concrete classes from `infrastructure/`. It sits above the delivery surfaces rather than inside one, so a service with no HTTP API still has exactly one wiring module.
 
-A violation of this rule is a bug even if the code runs.
+A violation of this rule is a bug even if the code runs. `poetry run lint-imports` is what checks it; the contracts that encode this diagram live in `pyproject.toml` and are given in `tooling.md` in the `python-workflow-and-tooling` skill.
 
 ## Cohesion
 
-Group by feature within a layer, not by type across layers. Keep cross-package imports few and one-directional; if two packages import each other, they are one package.
+Group by feature within a layer, not by type across layers. Keep cross-package imports one-directional; if two packages import each other, they are one package.

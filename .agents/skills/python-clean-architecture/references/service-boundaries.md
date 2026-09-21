@@ -9,7 +9,7 @@ A well-bounded module in a monolith can be extracted later; a premature service 
 Define before writing code:
 
 - The boundary and which data it exclusively owns. Two services must never write the same table.
-- The API contract as OpenAPI or a `.proto` file, versioned and published.
+- The API contract as OpenAPI or a `.proto` file, versioned and published from `contracts/` at the repo root. A `.proto` is source and is committed there; an OpenAPI document is generated from the pydantic models, so commit the snapshot consumers build against rather than hand-editing it.
 - The compatibility policy: additive changes only within a major version; consumers upgrade independently.
 
 ## Communication
