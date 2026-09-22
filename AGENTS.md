@@ -28,7 +28,8 @@ If these commands fail because the project is not set up this way, follow [boots
 
 ## Rules that apply to every task
 
-- Dependencies point inward. `core/` imports nothing from `application/`, `infrastructure/`, or top-level `interfaces/`, and no third-party framework. `lint-imports` enforces this; a failure there is not a style nit.
+- Dependencies point inward. `core/` imports nothing from `application/`, `infrastructure/`, or top-level `interfaces/`. `lint-imports` enforces this; a failure there is not a style nit.
+- Third-party libraries are permitted in every layer, `core/` included. Add one with `poetry add`, lockfile in the same commit, and review what it pulls in first. What stays out of `core/` is a category, not an origin: no I/O client, web framework, or ORM, and no vendor type in an entity or a `core/interfaces/` signature.
 - Full type hints on every signature, `mypy --strict` clean. No bare `except`.
 - Match the ceremony to the change: a bugfix needs a fix and a regression test, not an ADR. See [workflow](.agents/skills/python-workflow-and-tooling/references/workflow.md) for what each tier requires.
 - `interfaces` is two different things depending on path: `core/interfaces/` holds ABCs and Protocols, top-level `interfaces/` holds FastAPI routers, CLI, and controllers.

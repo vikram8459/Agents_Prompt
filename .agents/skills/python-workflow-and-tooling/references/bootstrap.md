@@ -27,7 +27,7 @@ Work through this in order and record what is missing or wrong.
 | Ruff config | `target-version = "py312"`, `D` and `ANN` selected, pydocstyle convention `google` |
 | mypy config | `strict = true` over `src`, plus the `tests.*` override from [tooling.md](tooling.md) |
 | Coverage gate | `--cov` narrowed to `core/` and `application/`, failing under 90% for those two and gating nothing else |
-| Import contracts | `[tool.importlinter]` holds the layers and forbidden contracts from [tooling.md](tooling.md), and `lint-imports` passes |
+| Import contracts | `[tool.importlinter]` holds the layers contract from [tooling.md](tooling.md), plus the forbidden contract naming this project's I/O and framework packages once it has one, and `lint-imports` passes |
 | `.pre-commit-config.yaml` | Exists, runs ruff and mypy through the project environment rather than a pinned mirror repo, does not run the test suite |
 | `.env.example` | Exists and lists every setting read by `config/settings.py` |
 | Forbidden files | None of `requirements.txt`, `requirements-dev.txt`, `setup.py`, `setup.cfg`, `.flake8`, `.isort.cfg` |
@@ -55,7 +55,7 @@ CI is deliberately not specified. Do not invent a pipeline file.
 | Ruff missing `D` or `ANN` | Add them. Expect a large number of new findings on existing code — fix them per module rather than in one sweep, or the review is unreadable |
 | mypy not strict | Enable `strict = true`. If existing code cannot pass, do not weaken the global setting; add a narrow per-module override with a comment and a plan |
 | Flat package layout | Move to `src/` and update the Poetry `packages` entry. Run the test suite before and after; an import that resolved by accident from the repo root will break |
-| No import contracts | Add both contracts from [tooling.md](tooling.md) and run `lint-imports` once to see the real state |
+| No import contracts | Add the layers contract from [tooling.md](tooling.md), add the forbidden contract if the project has I/O or framework packages to name, and run `lint-imports` once to see the real state |
 | `lint-imports` reports violations on existing code | Report the count and the worst offenders, and get agreement before rewriting. Reversing an import direction means introducing an interface and injecting it, not moving a file, so each one is a design change rather than a cleanup |
 
 ## Report

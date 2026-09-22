@@ -21,7 +21,7 @@ Every rule states an action an agent can take or a decision it can make, and a r
 
 Ask of each rule: what would a violation look like? If you cannot describe one, the rule is decoration.
 
-**3 —** `layout.md`: "`core/` imports from the standard library and nothing else. No SQLAlchemy, no pydantic, no FastAPI." A violation is a single import line. Enforceable by reading the file.
+**3 —** `layout.md`: "`core/` ... does not import an I/O client, a web framework, or an ORM." A violation is a single import line. Enforceable by reading the file.
 
 **2 —** `layout.md`'s `Cohesion` section: "Keep cross-package imports few and one-directional." The second half is checkable; "few" has no threshold, so an agent cannot tell whether it complied. One local fix: drop "few" or name a number.
 

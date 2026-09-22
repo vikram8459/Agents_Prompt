@@ -20,7 +20,7 @@ A function-local import does not escape `lint-imports`. It parses each module's 
 Two situations are sometimes offered as justification. Only the second is:
 
 - **Breaking an import cycle.** Not a fix here. A cycle between two packages means they are one package, and a cycle between layers means the dependency rule is already broken — see [layout](layout.md) for both. Restructure instead.
-- **A genuinely expensive or optional dependency** that most calls never touch. Allowed inside `infrastructure/` only, where third-party clients already live, and it carries a comment stating what the deferral buys. That comment is the "justification a rule demands" category in [comments](comments.md); without it the next reader has no way to tell the deferral from a mistake.
+- **A genuinely expensive or optional dependency** that most calls never touch. Allowed inside `infrastructure/` only, where I/O clients already live, and it carries a comment stating what the deferral buys. That comment is the "justification a rule demands" category in [comments](comments.md); without it the next reader has no way to tell the deferral from a mistake.
 
 The composition root is not an exception. `interfaces/bootstrap.py` imports concrete `infrastructure/` classes at module top like any other module — it is the one place allowed to name them, so there is nothing to hide.
 

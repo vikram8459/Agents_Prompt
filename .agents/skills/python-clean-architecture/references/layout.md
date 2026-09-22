@@ -69,7 +69,7 @@ interfaces/ ─┐
 infrastructure/ ─┘
 ```
 
-- `core/` imports from the standard library and nothing else. No SQLAlchemy, no pydantic, no FastAPI.
+- `core/` imports the standard library and third-party libraries that compute in-process. It does not import an I/O client, a web framework, or an ORM, and no vendor type appears in an entity, a value object, or a `core/interfaces/` signature; those libraries are adapters and live in `infrastructure/`. The `forbidden` contract in `tooling.md` names the packages this project keeps out.
 - `application/` imports `core/`. It depends on `core/interfaces/` abstractions, never on a concrete adapter.
 - `infrastructure/` imports `core/` to implement its interfaces.
 - Only the composition root (`interfaces/bootstrap.py`) is allowed to import concrete classes from `infrastructure/`. It sits above the delivery surfaces rather than inside one, so a service with no HTTP API still has exactly one wiring module.

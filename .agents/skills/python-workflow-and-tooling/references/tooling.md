@@ -73,10 +73,10 @@ ignore_imports = ["{project_name}.interfaces.bootstrap -> {project_name}.infrast
 unmatched_ignore_imports_alerting = "none"
 
 [[tool.importlinter.contracts]]
-name = "core is framework-free"
+name = "core does no I/O and depends on no framework"
 type = "forbidden"
 source_modules = ["{project_name}.core"]
-forbidden_modules = ["sqlalchemy", "pydantic", "fastapi", "httpx"]
+forbidden_modules = ["{io-or-framework-package}"]
 
 [build-system]
 requires = ["poetry-core"]
@@ -130,6 +130,8 @@ poetry run lint-imports
 The layers contract puts `{project_name}.interfaces` and `{project_name}.infrastructure` on one line separated by a pipe, which makes them independent siblings: neither may import the other, and both may import `application` and `core`. The parentheses mark those two optional, so a worker-only service or one with no adapters yet does not have to carry an empty package to satisfy the contract. `application` and `core` are deliberately not optional: every service has both, so a missing one is a typo or a moved package rather than a design choice, and the `Missing layer` error is the point. The one documented exception — the composition root importing concrete adapters — is the single `ignore_imports` entry, so a second exception is a visible decision rather than quiet drift. `unmatched_ignore_imports_alerting = "none"` keeps the contract passing on a project whose `bootstrap.py` has no infrastructure imports yet.
 
 `config/` and `utils/` are deliberately absent from the layers list. They are cross-cutting and imported from several layers, so ordering them would be a lie; the `forbidden` contract is what stops them dragging a framework into `core/`.
+
+`forbidden_modules` is a per-project list. Third-party libraries are permitted in every layer, so what this contract keeps out of `core/` is a category rather than an origin: the web framework, ORM, database driver, HTTP client, and broker client this project has adopted, each named by its distribution. Add one as it is adopted. Until the project has one, drop the contract rather than shipping the placeholder: import-linter reports a forbidden module it cannot resolve as `KEPT`, so a leftover placeholder passes while checking nothing.
 
 This is not a pre-commit hook. Building the import graph needs the package installed, and it is a whole-graph check that a partial commit cannot answer meaningfully. The local command and CI cover it.
 

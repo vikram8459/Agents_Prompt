@@ -14,7 +14,7 @@ interfaces/ ─┐
 infrastructure/ ─┘
 ```
 
-- `core/` — the domain. Imports the standard library and nothing else. No SQLAlchemy, no pydantic, no FastAPI.
+- `core/` — the domain. Imports the standard library and any third-party library that computes in-process. No I/O client, no web framework, no ORM.
 - `application/` — use cases. Imports `core/`, and depends on `core/interfaces/` abstractions rather than any concrete adapter.
 - `infrastructure/` — adapters that implement `core/interfaces/`.
 - `interfaces/` (top level) — delivery: HTTP routers, CLI, workers. Nothing imports from here except the composition root.
@@ -41,7 +41,7 @@ The word names two different directories — `core/interfaces/` and top-level `i
 - Constructor injection everywhere. A class receives its collaborators and never constructs or looks them up. No module-level singletons, no global mutable state, no service locator.
 - No mutable default arguments. A `[]`, `{}`, or `set()` in a signature is built once when the function is defined and shared by every call that omits it, so one call's mutation shows up in the next. Default to `()` with a `Sequence` annotation when the parameter is read-only, or to `None` when absent and empty mean different things. See [no mutable defaults](references/no-mutable-defaults.md) for the class-attribute, shared-constant, and dataclass-field versions of the same bug, which ruff's `B006` does not catch.
 - `interfaces/bootstrap.py` is the composition root and the only module allowed to import concrete classes from `infrastructure/`. It sits above the delivery surfaces, not inside one, so a gRPC-only or worker-only service still has exactly one wiring module.
-- A third-party client is imported only inside `infrastructure/`, behind a contract in `core/interfaces/`: database drivers in `infrastructure/database/`, outbound HTTP clients in `infrastructure/external_apis/`, cache in `infrastructure/cache/`, brokers in `infrastructure/messaging/`. The vendor's types, identifiers, and exceptions stop at that boundary.
+- A client that reaches outside the process — database driver, outbound HTTP client, cache, broker — is imported only inside `infrastructure/`, behind a contract in `core/interfaces/`: database drivers in `infrastructure/database/`, outbound HTTP clients in `infrastructure/external_apis/`, cache in `infrastructure/cache/`, brokers in `infrastructure/messaging/`. The vendor's types, identifiers, and exceptions stop at that boundary. A library that only computes is not a client and carries no placement rule beyond the layer using it.
 - Every import sits at the top of the file, after the module docstring and `from __future__ import annotations`, so a module's dependencies read as one block instead of hiding in a function body. A deferred import does not escape `lint-imports` either, which parses the module rather than the call graph. See [imports](references/imports.md) for the one narrow exception, the `TYPE_CHECKING` rule, and why a local import never resolves a cycle.
 - Value objects are `@dataclass(frozen=True)` with equality by value; entities have identity plus behavior and equality by ID.
 - Keep each interface to one responsibility. A five-method interface whose callers use two should be two interfaces.
